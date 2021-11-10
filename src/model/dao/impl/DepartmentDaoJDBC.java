@@ -27,14 +27,13 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 		
 		try {
 			st = conn.prepareStatement(
-					"INSERT INTO seller "
-					+"(Id, Name) "
+					"INSERT INTO Department "
+					+"(Name) "
 					+"VALUES " 
-					+"(?, ?)",
+					+"(?)",
 					Statement.RETURN_GENERATED_KEYS);
 			
-			st.setInt(1, obj.getId());
-			st.setString(2, obj.getName());
+			st.setString(1, obj.getName());
 			
 			int rowsAffected = st.executeUpdate();
 			
@@ -60,13 +59,48 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 
 	@Override
 	public void update(Department obj) {
-		// TODO Auto-generated method stub
+		PreparedStatement st = null;
+		
+		try {
+			st = conn.prepareStatement(
+					"UPDATE Department "
+					+"SET Id = ?, Name = ? "
+					+"WHERE Id = ?");
+			
+			st.setInt(1, obj.getId());
+			st.setString(2, obj.getName());
+			st.setInt(3, obj.getId());
+			
+			st.executeUpdate();
+		} 
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+		}
 		
 	}
 
 	@Override
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
+		PreparedStatement st = null;
+		
+		try {
+			st = conn.prepareStatement(
+					"DELETE FROM Department "
+					+"WHERE Id = ?");
+			
+			st.setInt(1, id);
+
+			st.executeUpdate();
+		} 
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+		}
 		
 	}
 
